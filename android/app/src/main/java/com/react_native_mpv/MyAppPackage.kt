@@ -7,12 +7,12 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ReactShadowNode
 import com.facebook.react.uimanager.ViewManager
 
+
 class MyAppPackage : ReactPackage {
 
-    override fun createViewManagers(
-        reactContext: ReactApplicationContext
-    ): MutableList<ViewManager<View, ReactShadowNode<*>>> = mutableListOf(
-    )
+      override fun createViewManagers(
+      reactContext: ReactApplicationContext
+  ) = listOf(BasicSurfaceViewManager(reactContext));
 
     override fun createNativeModules(
         reactContext: ReactApplicationContext
