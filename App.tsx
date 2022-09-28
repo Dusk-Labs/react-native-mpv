@@ -14,9 +14,8 @@ import BasicSurfaceViewManager from './components/BasicView';
 
 const App = () => {
   return (
-<View style={{justifyContent:"center",alignItems:"center",backgroundColor:"black",flex:1}}>
-  <Text style={{color:"white"}}>Test</Text>
-  <BasicSurfaceViewManager/>
+<View style={{justifyContent:"center",alignItems:"center",flex:1}}>
+  <BasicSurfaceViewManager />
 </View>        
   );
 };

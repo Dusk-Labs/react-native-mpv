@@ -41,6 +41,7 @@ import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.ViewGroupManager;
+import com.facebook.react.bridge.ReactContext;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,15 +54,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class BasicSurfaceViewManager extends SimpleViewManager<TextureView> {
+public class BasicSurfaceViewManager extends SimpleViewManager<BasicSurfaceView> {
     public static final String REACT_CLASS = "BasicSurfaceViewManager";
     public static final String ComponentTag = "BasicSurfaceViewManager";
-    ReactApplicationContext mCallerContext;
-    TextureView textureView;
+    ReactContext mCallerContext;
+    BasicSurfaceView BasicSurfaceView;
 
-    public BasicSurfaceViewManager(ReactApplicationContext reactContext) {
+    public BasicSurfaceViewManager(ReactContext reactContext) {
         mCallerContext = reactContext;
-        textureView = new TextureView(reactContext);
+        BasicSurfaceView = new BasicSurfaceView(reactContext);
+        Log.i("surfaceViewManager", "Created");
 
     }
 
@@ -71,8 +73,8 @@ public class BasicSurfaceViewManager extends SimpleViewManager<TextureView> {
     }
 
     @Override
-    public TextureView createViewInstance(ThemedReactContext context) {
-        return textureView;
+    public BasicSurfaceView createViewInstance(ThemedReactContext context) {
+        return BasicSurfaceView;
     }
 
 }
