@@ -41,8 +41,8 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         getHolder().addCallback(this);
         getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
-        this.setZOrderOnTop(true);
         /*
+        this.setZOrderOnTop(true);
         this.setZOrderMediaOverlay(true);
         */
 
@@ -79,6 +79,7 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         int height = 30;
         Canvas canvas = arg0.lockCanvas();
         canvas.drawARGB(255, 255, 168, 0);
+        /*
         // Lock the brush object
         // Set the brush
         paint.setColor(Color.WHITE);
@@ -91,6 +92,7 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         paint.setColor(Color.RED);
         RectF rf = new RectF(x, y, x + width, y + height);
         canvas.drawOval(rf, paint);
+        */
 
         Rect bounds = canvas.getClipBounds();
         Log.i("surface", "bounds: " + bounds);
