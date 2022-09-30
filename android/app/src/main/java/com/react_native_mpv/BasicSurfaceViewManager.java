@@ -61,10 +61,9 @@ public class BasicSurfaceViewManager extends SimpleViewManager<BasicSurfaceView>
     BasicSurfaceView BasicSurfaceView;
 
     public BasicSurfaceViewManager(ReactContext reactContext) {
+        Log.i("surfaceViewManager", "Created");
         mCallerContext = reactContext;
         BasicSurfaceView = new BasicSurfaceView(reactContext);
-        Log.i("surfaceViewManager", "Created");
-
     }
 
     @Override

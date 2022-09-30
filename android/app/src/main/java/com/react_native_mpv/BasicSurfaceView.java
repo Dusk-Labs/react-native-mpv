@@ -20,20 +20,21 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.bridge.ReactContext;
 
 public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
-    // private SurfaceHolder holder;
+    SurfaceHolder holder;
     private boolean runFlag;
     private Paint paint = new Paint();
 
     public BasicSurfaceView(ReactContext context) {
         super(context);
-        SurfaceHolder holder = this.getHolder();
+        // SurfaceHolder holder = this.getHolder();
+        holder = getHolder();
         holder.addCallback(this);
         Log.i("surfaceView", "Created");
-
     }
 
     @Override // call when switching between horizontal and vertical
     public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+        Log.i("surfaceChangedMethod", "Changed");
 
     }
 
@@ -41,6 +42,7 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     @Override
     public void surfaceCreated(SurfaceHolder arg0) {
         // Start the thread when creating
+        Log.i("surfaceCreatedMethod", "Created");
         runFlag = true;
         int x = 0;
         int y = 0;
@@ -64,8 +66,8 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         // paint.setColor(Color.RED);
         // RectF rf = new RectF(x, y, x + width, y + height);
         // canvas.drawOval(rf, paint);
-        Rect bounds = canvas.getClipBounds();
-        Log.i("surface", "bounds: " + bounds);
+        // Rect bounds = canvas.getClipBounds();
+        // Log.i("surface", "bounds: " + bounds);
     }
 
     // Called when the SurfaceView ends
@@ -73,5 +75,7 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     public void surfaceDestroyed(SurfaceHolder arg0) {
         // End the thread when exiting
         runFlag = false;
+        Log.i("surfaceDestroyecMethod", "Destroyed");
+
     }
 }
