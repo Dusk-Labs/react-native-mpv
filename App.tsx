@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,21 +7,32 @@ import {
   Text,
   useColorScheme,
   View,
+  requireNativeComponent,
 } from 'react-native';
-import BasicSurfaceViewManager from './components/BasicView';
-
-
 
 const App = () => {
+  const videoRef = useRef();
+
   return (
-<View style={{justifyContent:"center",alignItems:"center",flex:1}}>
-  <BasicSurfaceViewManager />
-</View>        
+    <View style={styles.root} >
+      <BasicSurfaceViewManager style={{flex: 1}} ref={videoRef} />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
- 
+  root: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  base: {
+    overflow: "hidden",
+    flex: 1,
+    height: "100%",
+    widhth: "100%",
+  }
 });
 
 export default App;
+
+const BasicSurfaceViewManager = requireNativeComponent('RCTMpvView');

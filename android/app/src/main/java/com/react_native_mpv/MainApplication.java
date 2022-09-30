@@ -41,11 +41,14 @@ public class MainApplication extends Application implements ReactApplication {
 
   @Override
   public ReactNativeHost getReactNativeHost() {
+    /*
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       return mNewArchitectureNativeHost;
     } else {
       return mReactNativeHost;
     }
+    */
+    return mReactNativeHost;
   }
 
   @Override
