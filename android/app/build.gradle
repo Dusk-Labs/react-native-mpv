@@ -3,6 +3,9 @@ apply plugin: 'kotlin-android'
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
+/** libmpv config stuff **/
+ext.abiCodes = ["armeabi-v7a": 1, "arm64-v8a": 2, "x86":3, "x86_64":4]
+
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
  * and bundleReleaseJsAndAssets).
@@ -204,10 +207,14 @@ android {
 
     splits {
         abi {
+            enable true
             reset()
-            enable enableSeparateBuildPerCPUArchitecture
-            universalApk false  // If true, also generate a universal APK
+            universalApk true  // If true, also generate a universal APK
             include (*reactNativeArchitectures())
+            project.ext.abiCodes.each { abi, _ ->
+                if (new File(project.projectDir, "src/main/jniLibs/${abi}").exists())
+                include(abi)
+            }
         }
     }
     signingConfigs {
@@ -245,6 +252,18 @@ android {
             }
 
         }
+    }
+}
+
+// Map versionCode so each ABI gets a different one
+// e.g. x86 with version 21 gets a versionCode of 3021
+import com.android.build.VariantOutput
+android.applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+        def base = project.ext.abiCodes.get(output.getFilter(VariantOutput.ABI))
+        // universal APK keeps the original versionCode
+        if (base != null)
+            output.versionCodeOverride = base * 1000 + variant.versionCode
     }
 }
 
