@@ -18,6 +18,8 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.ThemedReactContext;
 
+import com.react_native_mpv.MPVLib;
+
 public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     private String TAG = "SurfaceView";
     private final ThemedReactContext context;
@@ -53,11 +55,19 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         requestFocus();
 
         Log.i("surfaceView", "Created");
+
+        MPVLib.create(context);
+        MPVLib.setOptionString("force-window", "no");
+        MPVLib.setOptionString("vo", "gpu");
+        MPVLib.setOptionString("gpu-context", "android");
+        MPVLib.init();
     }
 
     @Override // call when switching between horizontal and vertical
     public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-        Log.i("surface", "surface changed");
+        Log.i(TAG, "surface changed");
+        MPVLib.setPropertyString("android-surface-size", arg2 + "x" + arg3);
+
     }
 
     @Override
@@ -70,34 +80,11 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     @Override
     public void surfaceCreated(SurfaceHolder arg0) {
         Log.i("surfaceView", "Initialized");
-        // Start the thread when creating
-        int x = 0;
-        int y = 0;
-        int dx = 2;
-        int dy = 3;
-        int width = 30;
-        int height = 30;
-        Canvas canvas = arg0.lockCanvas();
-        canvas.drawARGB(255, 255, 168, 0);
-        /*
-        // Lock the brush object
-        // Set the brush
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Paint.Style.FILL);
-        // Fill the background color
-        Rect rect = new Rect(0, 0, this.getWidth(), this.getHeight());
-        canvas.drawRect(rect, paint);
+        MPVLib.attachSurface(holder.getSurface());
+        MPVLib.setOptionString("force-window", "yes");
 
-        // draw a small ball, set the color of the ball to red
-        paint.setColor(Color.RED);
-        RectF rf = new RectF(x, y, x + width, y + height);
-        canvas.drawOval(rf, paint);
-        */
-
-        Rect bounds = canvas.getClipBounds();
-        Log.i("surface", "bounds: " + bounds);
-
-        holder.unlockCanvasAndPost(canvas);
+        String[] cmd = { "loadfile", "https://www.larmoire.info/jellyfish/media/jellyfish-3-mbps-hd-h264.mkv" };
+        MPVLib.command(cmd);
     }
 
     // Called when the SurfaceView ends
