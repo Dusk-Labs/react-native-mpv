@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
     color: "white",
     fontSize: 24,
+    margin: 100,
   },
   base: {
     overflow: "hidden",
