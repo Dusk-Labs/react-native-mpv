@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 . ./include/depinfo.sh
@@ -6,7 +6,7 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 cleanbuild=0
 nodeps=0
 clang=1
-target=mpv-android
+target=mpv
 arch=armv7l
 
 getdeps () {
@@ -44,14 +44,10 @@ loadarch () {
 		echo "Invalid architecture"
 		exit 1
 	fi
+
 	export prefix_dir="$PWD/prefix/$prefix_name"
-	if [ $clang -eq 1 ]; then
-		export CC=$cc_triple-clang
-		export CXX=$cc_triple-clang++
-	else
-		export CC=$cc_triple-gcc
-		export CXX=$cc_triple-g++
-	fi
+        export CC=$cc_triple-clang
+        export CXX=$cc_triple-clang++
 	export AR=llvm-ar
 	export RANLIB=llvm-ranlib
 }
@@ -89,10 +85,11 @@ CROSSFILE
 }
 
 build () {
-	if [ $1 != "mpv-android" ] && [ ! -d deps/$1 ]; then
+	if [ ! -d deps/$1 ]; then
 		printf >&2 '\e[1;31m%s\e[m\n' "Target $1 not found"
 		return 1
 	fi
+
 	if [ $nodeps -eq 0 ]; then
 		printf >&2 '\e[1;34m%s\e[m\n' "Preparing $1..."
 		local deps=$(getdeps $1)
@@ -101,14 +98,11 @@ build () {
 			build $dep
 		done
 	fi
+
 	printf >&2 '\e[1;34m%s\e[m\n' "Building $1..."
-	if [ "$1" == "mpv-android" ]; then
-		pushd ..
-		BUILDSCRIPT=buildscripts/scripts/$1.sh
-	else
-		pushd deps/$1
-		BUILDSCRIPT=../../scripts/$1.sh
-	fi
+        pushd deps/$1
+        BUILDSCRIPT=../../scripts/$1.sh
+
 	[ $cleanbuild -eq 1 ] && $BUILDSCRIPT clean
 	$BUILDSCRIPT build
 	popd
@@ -153,8 +147,5 @@ done
 loadarch $arch
 setup_prefix
 build $target
-
-[ "$target" == "mpv-android" ] && \
-	ls -lh ../app/build/outputs/apk/{default,api29}/*/*.apk
 
 exit 0

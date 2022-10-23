@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 . ../../include/path.sh
 
@@ -21,6 +21,8 @@ cpu=armv7-a
 
 cpuflags=
 [[ "$ndk_triple" == "arm"* ]] && cpuflags="$cpuflags -mfpu=neon -mcpu=cortex-a8"
+
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$prefix_dir/lib/pkgconfig"
 
 ../configure \
 	--target-os=android --enable-cross-compile --cross-prefix=$ndk_triple- --cc=$CC \

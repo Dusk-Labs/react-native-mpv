@@ -41,12 +41,7 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
         holder = this.getHolder();
         getHolder().addCallback(this);
-        getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
-        /*
-        this.setZOrderOnTop(true);
-        this.setZOrderMediaOverlay(true);
-        */
+        //getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
         this.setVisibility(0);
         
@@ -57,9 +52,17 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         Log.i("surfaceView", "Created");
 
         MPVLib.create(context);
+
         MPVLib.setOptionString("force-window", "no");
         MPVLib.setOptionString("vo", "gpu");
         MPVLib.setOptionString("gpu-context", "android");
+        MPVLib.setPropertyString("loop-file", "inf");
+        MPVLib.setOptionString("hwdec", "mediacodec-copy");
+        MPVLib.setOptionString("hwdec-codecs", "h264,hevc,mpeg4,mpeg2video,vp8,vp9");
+        MPVLib.setOptionString("vd-lavc-dr", "no");
+        MPVLib.setOptionString("persistent-overlay", "yes");
+        MPVLib.setOptionString("load-stats-overlay", "yes");
+
         MPVLib.init();
     }
 
@@ -83,8 +86,11 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         MPVLib.attachSurface(holder.getSurface());
         MPVLib.setOptionString("force-window", "yes");
 
-        String[] cmd = { "loadfile", "https://www.larmoire.info/jellyfish/media/jellyfish-3-mbps-hd-h264.mkv" };
+        String[] cmd = { "script-binding", "stats/display-stats-toggle" };
         MPVLib.command(cmd);
+
+        String[] cmd2 = { "loadfile", "https://www.larmoire.info/jellyfish/media/jellyfish-40-mbps-hd-hevc-10bit.mkv" };
+        MPVLib.command(cmd2);
     }
 
     // Called when the SurfaceView ends
