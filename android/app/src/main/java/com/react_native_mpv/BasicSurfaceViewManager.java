@@ -18,6 +18,7 @@ import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.ViewGroupManager;
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.uimanager.annotations.ReactProp;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -25,11 +26,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class BasicSurfaceViewManager extends SimpleViewManager<FrameLayout> {
+public class BasicSurfaceViewManager extends SimpleViewManager<BasicSurfaceView> {
     public static final String REACT_CLASS = "RCTMpvView";
     public static final String ComponentTag = "BasicSurfaceViewManager";
     ReactContext reactContext;
     ThemedReactContext themedContext;
+
+    private static final String PROP_TEST = "test";
 
     public BasicSurfaceViewManager(ReactContext reactContext) {
         Log.i("surfaceViewManager", "Created");
@@ -42,11 +45,28 @@ public class BasicSurfaceViewManager extends SimpleViewManager<FrameLayout> {
     }
 
     @Override
-    public FrameLayout createViewInstance(ThemedReactContext reactContext) {
+    public BasicSurfaceView createViewInstance(ThemedReactContext reactContext) {
         this.themedContext = reactContext;
-        FrameLayout layout = new FrameLayout(reactContext);
-        layout.addView(new BasicSurfaceView(reactContext));
-
-        return layout;
+        /*
+         * FrameLayout layout = new FrameLayout(reactContext);
+         * layout.addView(new BasicSurfaceView(reactContext));
+         * 
+         * return layout;
+         */
+        return new BasicSurfaceView(reactContext);
     }
+
+    @ReactProp(name = "radius")
+    public void setRadius(BasicSurfaceView view, float value) {
+        Log.i("surfaceViewManager", "setRadius");
+        float radius = value;
+        // view.invalidate();
+    }
+
+    @ReactProp(name = "test")
+    public void setTest(final BasicSurfaceView view, final String test) {
+        Log.i("ReactProooooooop", "setTest");
+        view.test(test);
+    }
+
 }

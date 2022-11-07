@@ -26,7 +26,7 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     SurfaceHolder holder;
     private Paint paint = new Paint();
 
-    //Rewrite the constructor
+    // Rewrite the constructor
     public BasicSurfaceView(ThemedReactContext context) {
         this(context, null);
     }
@@ -41,10 +41,10 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
 
         holder = this.getHolder();
         getHolder().addCallback(this);
-        //getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        // getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
         this.setVisibility(0);
-        
+
         setFocusable(true);
         setFocusableInTouchMode(true);
         requestFocus();
@@ -89,13 +89,50 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         String[] cmd = { "script-binding", "stats/display-stats-toggle" };
         MPVLib.command(cmd);
 
-        String[] cmd2 = { "loadfile", "https://www.larmoire.info/jellyfish/media/jellyfish-40-mbps-hd-hevc-10bit.mkv" };
+        // MPVLib.setOptionString("start", "50%");// works
+        // MPVLib.setOptionString("speed", "50"); // works
+        // MPVLib.setOptionString("geometry", "50%");// not working
+
+        String[] cmd2 = { "loadfile",
+                "https://www.larmoire.info/jellyfish/media/jellyfish-40-mbps-hd-hevc-10bit.mkv" };
+        // https://www.larmoire.info/jellyfish/media/jellyfish-40-mbps-hd-hevc-10bit.mkv
+        // https://rr6---sn-uxax4vopj55gb-x1xee.googlevideo.com/videoplayback?expire=1666832045&ei=TYJZY5eKMYqE-LAP-fSkwAM&ip=186.130.71.76&id=o-AC6UFqF42fJ6o0LplSxryidf2gyPjExX_T76H_ywiedt&itag=244&aitags=133%2C134%2C135%2C136%2C137%2C160%2C242%2C243%2C244%2C247%2C248%2C271%2C278%2C313&source=youtube&requiressl=yes&mh=Zd&mm=31%2C29&mn=sn-uxax4vopj55gb-x1xee%2Csn-x1x7dnez&ms=au%2Crdu&mv=m&mvi=6&pl=20&initcwndbps=868750&vprv=1&mime=video%2Fwebm&ns=5Rktz37dz_8h6cJd4MrrZZMI&gir=yes&clen=7617088&dur=375.575&lmt=1666803083337019&mt=1666810153&fvip=5&keepalive=yes&fexp=24001373%2C24007246&c=WEB&txp=3319224&n=OgQ1DNRh_pp6dg&sparams=expire%2Cei%2Cip%2Cid%2Caitags%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cns%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRAIgQU6q1WeIY16lN4-OtraLXF5vCOhn2YnX_gIbxMHRepYCIHbP3swiie9DKCxDS1kGTfZdDZSOH1RsY-qMpqbrB2eG&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRgIhAJaNpIkWte5CiNRdWfStKV_s-qIumiwXqIi5Jqe8tvRAAiEAlkFqJOpQfLq-_rymli33P8HcJIZpYlgdab7SNCxCwbU%3D&alr=yes&cpn=HiChUNgHQRPCc1yI&cver=2.20221024.10.00&range=0-170246&rn=1&rbuf=0&altitags=243%2C242
         MPVLib.command(cmd2);
+
+        // String[] cmd3 = { "show-progress" }; // not showing anything
+        // MPVLib.command(cmd3);
+
+        // String[] cmd4 = { "stop" };// not playback
+        // MPVLib.command(cmd4);
+        // String[] cmd5 = { "audio-add" };
+        // MPVLib.command(cmd5);
+
     }
 
     // Called when the SurfaceView ends
     @Override
     public void surfaceDestroyed(SurfaceHolder arg0) {
         Log.i("surface", "surface destroyed");
+        MPVLib.setPropertyString("vo", "null");
+        MPVLib.setOptionString("force-window", "no");
+        MPVLib.detachSurface();
+    }
+
+    public void pause() {
+        MPVLib.command(new String[] { "cycle", "pause" });
+    }
+
+    public void stop() {
+        MPVLib.command(new String[] { "stop" });
+    }
+
+    public void test(String value) {
+        if (value == "pause") {
+            Log.i("test", "pause");
+        } else if (value == "play") {
+            Log.i("test", "play");
+        } else {
+            Log.i("test", "none");
+        }
     }
 }

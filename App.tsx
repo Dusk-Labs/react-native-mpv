@@ -9,6 +9,7 @@ import {
   View,
   requireNativeComponent,
 } from 'react-native';
+import  BasicSurfaceView from './BasicSurfaceViewManager';
 
 const App = () => {
   const videoRef = useRef();
@@ -16,7 +17,7 @@ const App = () => {
   return (
     <View style={styles.root} >
       <Text style={styles.text}>Hello world</Text>
-      <BasicSurfaceViewManager style={{flex: 1}} ref={videoRef} />
+      <BasicSurfaceView ref={videoRef} style={{flex:1}} radius={10} test="test" />
     </View>
   );
 };
@@ -43,4 +44,4 @@ const styles = StyleSheet.create({
 
 export default App;
 
-const BasicSurfaceViewManager = requireNativeComponent('RCTMpvView');
+//const BasicSurfaceViewManager = requireNativeComponent('RCTMpvView');
