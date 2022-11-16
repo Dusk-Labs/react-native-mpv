@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+//import android.content.pm.ActivityInfo;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -83,6 +84,7 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     @Override
     public void surfaceCreated(SurfaceHolder arg0) {
         Log.i("surfaceView", "Initialized");
+        // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         MPVLib.attachSurface(holder.getSurface());
         MPVLib.setOptionString("force-window", "yes");
 
@@ -127,12 +129,29 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     public void test(String value) {
-        if (value == "pause") {
+        Log.i("value arrived to test method", value);
+        if (value.equals("pause")) {
             Log.i("test", "pause");
-        } else if (value == "play") {
+        } else if (value.equals("play")) {
             Log.i("test", "play");
         } else {
             Log.i("test", "none");
         }
+    }
+
+    public void loadUrl(String url) {
+        String[] cmd2 = { "loadfile",
+                url };
+        // https://www.larmoire.info/jellyfish/media/jellyfish-40-mbps-hd-hevc-10bit.mkv
+        // https://rr6---sn-uxax4vopj55gb-x1xee.googlevideo.com/videoplayback?expire=1666832045&ei=TYJZY5eKMYqE-LAP-fSkwAM&ip=186.130.71.76&id=o-AC6UFqF42fJ6o0LplSxryidf2gyPjExX_T76H_ywiedt&itag=244&aitags=133%2C134%2C135%2C136%2C137%2C160%2C242%2C243%2C244%2C247%2C248%2C271%2C278%2C313&source=youtube&requiressl=yes&mh=Zd&mm=31%2C29&mn=sn-uxax4vopj55gb-x1xee%2Csn-x1x7dnez&ms=au%2Crdu&mv=m&mvi=6&pl=20&initcwndbps=868750&vprv=1&mime=video%2Fwebm&ns=5Rktz37dz_8h6cJd4MrrZZMI&gir=yes&clen=7617088&dur=375.575&lmt=1666803083337019&mt=1666810153&fvip=5&keepalive=yes&fexp=24001373%2C24007246&c=WEB&txp=3319224&n=OgQ1DNRh_pp6dg&sparams=expire%2Cei%2Cip%2Cid%2Caitags%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cns%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRAIgQU6q1WeIY16lN4-OtraLXF5vCOhn2YnX_gIbxMHRepYCIHbP3swiie9DKCxDS1kGTfZdDZSOH1RsY-qMpqbrB2eG&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRgIhAJaNpIkWte5CiNRdWfStKV_s-qIumiwXqIi5Jqe8tvRAAiEAlkFqJOpQfLq-_rymli33P8HcJIZpYlgdab7SNCxCwbU%3D&alr=yes&cpn=HiChUNgHQRPCc1yI&cver=2.20221024.10.00&range=0-170246&rn=1&rbuf=0&altitags=243%2C242
+        MPVLib.command(cmd2);
+    }
+
+    public void pauseVideo() {
+        MPVLib.setPropertyBoolean("pause", true);
+    }
+
+    public void playVideo() {
+        MPVLib.setPropertyBoolean("pause", false);
     }
 }

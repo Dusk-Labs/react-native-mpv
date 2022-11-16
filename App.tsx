@@ -7,7 +7,6 @@ import {
   Text,
   useColorScheme,
   View,
-  requireNativeComponent,
 } from 'react-native';
 import  BasicSurfaceView from './BasicSurfaceViewManager';
 
@@ -16,8 +15,9 @@ const App = () => {
 
   return (
     <View style={styles.root} >
-      <Text style={styles.text}>Hello world</Text>
-      <BasicSurfaceView ref={videoRef} style={{flex:1}} radius={10} test="test" />
+      <StatusBar hidden={true}/>
+      <Text style={styles.text}>Hello dogg</Text>
+      <BasicSurfaceView ref={videoRef} style={{flex:1}} radius={10} test="play" />
     </View>
   );
 };
