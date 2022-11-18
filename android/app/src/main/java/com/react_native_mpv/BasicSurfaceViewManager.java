@@ -63,16 +63,19 @@ public class BasicSurfaceViewManager extends SimpleViewManager<BasicSurfaceView>
         // view.invalidate();
     }
 
-    @ReactProp(name = "test")
-    public void setTest(final BasicSurfaceView view, final String test) {
-        Log.i("ReactProooooooop", test);
-        view.test(test);
-        if (test.equals("pause")) {
+    @ReactProp(name = "pause")
+    public void setTest(final BasicSurfaceView view, final Boolean pause) {
+        if (pause == true) {
             view.pauseVideo();
         }
-        if (test.equals("play")) {
+        if (pause == false) {
             view.playVideo();
         }
+    }
+
+    @ReactProp(name = "src")
+    public void setUri(final BasicSurfaceView view, final String uri) {
+        view.setUri(uri);
     }
 
 }
