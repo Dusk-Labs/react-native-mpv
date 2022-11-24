@@ -18,8 +18,7 @@ const App = () => {
  const src6="https://jkanime.net/chainsaw-man/1/"
  return (
     <View style={styles.root} >
-      <StatusBar hidden={true}/>
-      <BasicSurfaceView  style={{flex:1}} pause={false} src={src1} volume={"100"} seek={"0"}/>
+      <BasicSurfaceView   pause={false} src={src1} volume={"100"} seek={"0"}/>
     </View>
   );
 };
