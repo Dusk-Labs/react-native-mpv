@@ -131,7 +131,22 @@ public class BasicSurfaceView extends SurfaceView implements SurfaceHolder.Callb
         MPVLib.setPropertyBoolean("pause", true);
     }
 
+    // public void pauseVideo(){
+    // string [] cmd={"cycle","pause"};
+    // MPVLib.command(cmd);
+    // }
     public void playVideo() {
         MPVLib.setPropertyBoolean("pause", false);
+    }
+
+    public void setVolume(String volume) {// value from 0 to 100
+        MPVLib.setOptionString("volume", volume);
+    }
+
+    public void setSeek(String seek) {
+        // MPVLib.setPropertyInt("time-pos", seek);
+        // MPVLib.setOptionString("seek", seek);
+        String[] cmd = { "seek", seek, "absolute-percent" };
+        MPVLib.command(cmd);
     }
 }

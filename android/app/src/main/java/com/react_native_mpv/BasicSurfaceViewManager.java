@@ -78,4 +78,14 @@ public class BasicSurfaceViewManager extends SimpleViewManager<BasicSurfaceView>
         view.setUri(uri);
     }
 
+    @ReactProp(name = "volume")
+    public void setVolume(final BasicSurfaceView view, final String volume) {
+        view.setVolume(volume);
+    }
+
+    @ReactProp(name = "seek")
+    public void setSeek(final BasicSurfaceView view, final String seek) {
+        view.setSeek(seek);
+    }
+
 }
