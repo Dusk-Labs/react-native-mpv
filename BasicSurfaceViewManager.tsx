@@ -10,7 +10,7 @@ interface Props  {
    }
    
    const BasicSurfaceView = (props: Props) => {
-    return <BasicSurfaceViewManager {...props} />;
+    return <BasicSurfaceViewManager {...props} style={{flex:1}}/>;//flex:1 is important, otherwise it will have problems wih JNI, don't know why
    };
 
    
