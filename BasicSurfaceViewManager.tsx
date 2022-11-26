@@ -1,4 +1,4 @@
-import {requireNativeComponent} from 'react-native'
+import {requireNativeComponent,View} from 'react-native'
 const BasicSurfaceViewManager = requireNativeComponent('RCTMpvView');
 
 interface Props  {
