@@ -1,0 +1,177 @@
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath "com.android.tools.build:gradle:7.2.1"
+  }
+}
+
+def isNewArchitectureEnabled() {
+  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
+}
+
+apply plugin: "com.android.library"
+
+def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
+
+task downloadMpv(type: Exec) {
+    workingDir '../buildscripts/'
+    commandLine './download.sh'
+}
+
+// make sure these deps are installed:
+//     autoconf pkg-config libtool ninja-build
+//     python3-pip python3-setuptools unzip
+// make sure these python deps are installed: meson
+
+task compileMpv(type: Exec) {
+    workingDir '../buildscripts/'
+    commandLine './buildall.sh'
+}
+
+task compileMpvi686(type: Exec) {
+    workingDir '../buildscripts/'
+    commandLine './buildall.sh', '--arch', 'x86'
+}
+
+task compileMpvAmd64(type: Exec) {
+    workingDir '../buildscripts/'
+    commandLine './buildall.sh', '--arch', 'x86_64'
+}
+
+preBuild.dependsOn compileMpvAmd64
+compileMpvAmd64.dependsOn compileMpvi686
+compileMpvi686.dependsOn compileMpv
+compileMpv.dependsOn downloadMpv
+
+if (isNewArchitectureEnabled()) {
+  apply plugin: "com.facebook.react"
+}
+
+def getExtOrDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["Mpv_" + name]
+}
+
+def getExtOrIntegerDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["Mpv_" + name]).toInteger()
+}
+
+def supportsNamespace() {
+  def parsed = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')
+  def major = parsed[0].toInteger()
+  def minor = parsed[1].toInteger()
+
+  // Namespace support was added in 7.3.0
+  if (major == 7 && minor >= 3) {
+    return true
+  }
+
+  return major >= 8
+}
+
+/**
+ * Architectures to build native code for.
+ */
+def reactNativeArchitectures() {
+    def value = project.getProperties().get("reactNativeArchitectures")
+    return value ? value.split(",") : ["armeabi-v7a", "arm64-v8a"]
+}
+
+/** libmpv config stuff **/
+ext.abiCodes = ["armeabi-v7a": 1, "arm64-v8a": 2, "x86": 3, "x86_64": 4]
+
+android {
+  if (supportsNamespace()) {
+    namespace "com.mpv"
+
+    sourceSets {
+      main {
+        manifest.srcFile "src/main/AndroidManifestNew.xml"
+      }
+    }
+  }
+
+  ndkVersion rootProject.ext.ndkVersion
+  compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
+
+  defaultConfig {
+    minSdkVersion getExtOrIntegerDefault("minSdkVersion")
+    targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
+    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+    multiDexEnabled true
+    externalNativeBuild {
+      cmake {
+        arguments "-DMPV_LIBRARY_PREFIX=$projectDir/../buildscripts/prefix"
+      }
+    }
+  }
+    
+  externalNativeBuild {
+    cmake {
+      path "$projectDir/src/main/jni/CMakeLists.txt"
+    }
+  }
+
+  splits {
+    abi {
+      enable true
+      reset()
+      universalApk false  // If true, also generate a universal APK
+      include (*reactNativeArchitectures())
+        project.ext.abiCodes.each { abi, _ ->
+          if (new File(project.projectDir, "$projectDir/../buildscripts/prefix/${abi}").exists())
+          include(abi)
+        }
+      }
+  }
+
+  signingConfigs {
+    debug {
+      storeFile file('debug.keystore')
+      storePassword 'android'
+      keyAlias 'androiddebugkey'
+      keyPassword 'android'
+    }
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+    }
+  }
+
+  lintOptions {
+    disable "GradleCompatible"
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+}
+
+repositories {
+  mavenCentral()
+  google()
+}
+
+dependencies {
+  // For < 0.71, this will be from the local maven repo
+  // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
+  //noinspection GradleDynamicVersion
+  implementation "com.facebook.react:react-native:+"
+  implementation 'com.android.support:multidex:1.0.0'
+
+}
+
+if (isNewArchitectureEnabled()) {
+  react {
+    jsRootDir = file("../src/")
+    libraryName = "MpvView"
+    codegenJavaPackageName = "com.mpv"
+  }
+}

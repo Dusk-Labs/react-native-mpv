@@ -1,0 +1,10 @@
+android/build/**
+node_modules
+example/android/app/build/**
+buildscripts/sdk
+buildscripts/deps/**
+buildscripts/prefix/arm64
+buildscripts/prefix/armv7l
+buildscripts/prefix/x86
+buildscripts/prefix/x86_64
+android/.cxx
